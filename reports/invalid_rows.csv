@@ -1,0 +1,9 @@
+row_number,order_id,rule_id,column,severity,value,message,remediation
+5,10004,CUSTOMER_ID_NOT_NULL,customer_id,critical,,customer_id is required for customer joins,lookup_customer_id_from_email
+6,10005,EMAIL_FORMAT,email,high,elena@example,email must be RFC-like name@domain.tld format,lookup_primary_email_from_customer_dimension
+9,10008,ORDER_TOTAL_NON_NEGATIVE,order_total,critical,-14.99,order_total must be zero or greater,quarantine_negative_amount
+10,10009,SHIP_DATE_NOT_IN_FUTURE,ship_date,high,2026-07-08,ship_date cannot be after the business date,clear_future_ship_date_and_mark_for_reprocessing
+11,10010,ORDER_ID_UNIQUE,order_id,critical,10010,order_id appears more than once in this batch,drop_exact_duplicate_keep_first
+12,10010,ORDER_ID_UNIQUE,order_id,critical,10010,order_id appears more than once in this batch,drop_exact_duplicate_keep_first
+14,10012,SHIP_DATE_NOT_BEFORE_ORDER_DATE,ship_date,high,2026-07-01,ship_date cannot be earlier than order_date,clear_invalid_ship_date_and_mark_for_reprocessing
+15,10013,CURRENCY_VALID,currency,medium,EUR,only USD rows are supported in the gold table,quarantine_non_usd_until_fx_pipeline_ready

@@ -1,0 +1,114 @@
+{
+  "summary": {
+    "total_rows": 15,
+    "invalid_rows": 7,
+    "valid_rows": 8,
+    "issue_count": 8,
+    "pass_rate": 0.5333,
+    "issues_by_rule": {
+      "CURRENCY_VALID": 1,
+      "CUSTOMER_ID_NOT_NULL": 1,
+      "EMAIL_FORMAT": 1,
+      "ORDER_ID_UNIQUE": 2,
+      "ORDER_TOTAL_NON_NEGATIVE": 1,
+      "SHIP_DATE_NOT_BEFORE_ORDER_DATE": 1,
+      "SHIP_DATE_NOT_IN_FUTURE": 1
+    },
+    "issues_by_severity": {
+      "critical": 4,
+      "high": 3,
+      "medium": 1
+    },
+    "impacted_order_ids": [
+      "10004",
+      "10005",
+      "10008",
+      "10009",
+      "10010",
+      "10012",
+      "10013"
+    ]
+  },
+  "issues": [
+    {
+      "row_number": 5,
+      "order_id": "10004",
+      "rule_id": "CUSTOMER_ID_NOT_NULL",
+      "column": "customer_id",
+      "severity": "critical",
+      "value": null,
+      "message": "customer_id is required for customer joins",
+      "remediation": "lookup_customer_id_from_email"
+    },
+    {
+      "row_number": 6,
+      "order_id": "10005",
+      "rule_id": "EMAIL_FORMAT",
+      "column": "email",
+      "severity": "high",
+      "value": "elena@example",
+      "message": "email must be RFC-like name@domain.tld format",
+      "remediation": "lookup_primary_email_from_customer_dimension"
+    },
+    {
+      "row_number": 9,
+      "order_id": "10008",
+      "rule_id": "ORDER_TOTAL_NON_NEGATIVE",
+      "column": "order_total",
+      "severity": "critical",
+      "value": -14.99,
+      "message": "order_total must be zero or greater",
+      "remediation": "quarantine_negative_amount"
+    },
+    {
+      "row_number": 10,
+      "order_id": "10009",
+      "rule_id": "SHIP_DATE_NOT_IN_FUTURE",
+      "column": "ship_date",
+      "severity": "high",
+      "value": "2026-07-08",
+      "message": "ship_date cannot be after the business date",
+      "remediation": "clear_future_ship_date_and_mark_for_reprocessing"
+    },
+    {
+      "row_number": 11,
+      "order_id": "10010",
+      "rule_id": "ORDER_ID_UNIQUE",
+      "column": "order_id",
+      "severity": "critical",
+      "value": "10010",
+      "message": "order_id appears more than once in this batch",
+      "remediation": "drop_exact_duplicate_keep_first"
+    },
+    {
+      "row_number": 12,
+      "order_id": "10010",
+      "rule_id": "ORDER_ID_UNIQUE",
+      "column": "order_id",
+      "severity": "critical",
+      "value": "10010",
+      "message": "order_id appears more than once in this batch",
+      "remediation": "drop_exact_duplicate_keep_first"
+    },
+    {
+      "row_number": 14,
+      "order_id": "10012",
+      "rule_id": "SHIP_DATE_NOT_BEFORE_ORDER_DATE",
+      "column": "ship_date",
+      "severity": "high",
+      "value": "2026-07-01",
+      "message": "ship_date cannot be earlier than order_date",
+      "remediation": "clear_invalid_ship_date_and_mark_for_reprocessing"
+    },
+    {
+      "row_number": 15,
+      "order_id": "10013",
+      "rule_id": "CURRENCY_VALID",
+      "column": "currency",
+      "severity": "medium",
+      "value": "EUR",
+      "message": "only USD rows are supported in the gold table",
+      "remediation": "quarantine_non_usd_until_fx_pipeline_ready"
+    }
+  ]
+}

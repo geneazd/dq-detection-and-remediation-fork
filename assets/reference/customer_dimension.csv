@@ -1,0 +1,15 @@
+customer_id,customer_name,primary_email,active_flag
+C-001,Amy Chen,amy.chen@example.com,true
+C-002,Brian McNeil,brian@retailco.com,true
+C-003,Carla Mendez,carla.mendez@example.com,true
+C-004,Daniel Kim,daniel.k@example.com,true
+C-005,Elena Park,elena.park@example.com,true
+C-006,Frank Lee,frank.lee@example.com,true
+C-007,Grace Patel,grace.patel@example.com,true
+C-008,Henry Owens,henry.owens@example.com,true
+C-009,Irina Sokolov,irina.sokolov@example.com,true
+C-010,Julia Nguyen,julia.nguyen@example.com,true
+C-011,Kai Brooks,kai@example.com,true
+C-012,Lena Martin,lena.martin@example.com,true
+C-013,Marco Rossi,marco.rossi@example.com,true
+C-014,Naomi Wright,naomi.wright@example.com,true

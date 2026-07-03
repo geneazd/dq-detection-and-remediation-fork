@@ -1,0 +1,24 @@
+policy_name: customer_orders_dq_remediation_v1
+run_mode: demo
+current_business_date: '2026-07-03'
+outputs:
+  clean_table: assets/data/customer_orders_remediated.csv
+  quarantine_table: assets/data/customer_orders_quarantine.csv
+  evidence_report: reports/dq_summary.json
+  invalid_rows: reports/invalid_rows.csv
+remediation_actions:
+  normalize:
+    - status: uppercase and trim
+    - currency: uppercase and trim
+    - email: lowercase and trim
+  enrich:
+    - customer_id: fill from customer_dimension by email when customer_id is missing
+    - email: fill primary_email from customer_dimension when email fails format and customer_id exists
+  deduplicate:
+    - order_id: drop exact duplicate records, keep earliest ingested_at
+  quarantine:
+    - negative order_total
+    - non-USD currency
+  reprocess:
+    - ship_date before order_date: set ship_date null, status PROCESSING unless terminal status is CANCELLED/RETURNED
+    - ship_date after current business date: set ship_date null, status PROCESSING

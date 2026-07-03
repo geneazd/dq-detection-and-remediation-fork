@@ -1,0 +1,67 @@
+flow_name: flow_customer_orders_daily
+flow_type: batch
+platform: watsonx.data integration
+purpose: Detect and remediate data-quality drift before publishing customer orders to gold table.
+sources:
+  - name: shopify_orders_landing
+    type: file_or_table
+    path: assets/data/customer_orders_raw.csv
+  - name: customer_dimension
+    type: reference_table
+    path: assets/reference/customer_dimension.csv
+targets:
+  - name: customer_orders_gold
+    table: demo_catalog.sales_curated.customer_orders
+    mode: merge_on_order_id
+  - name: customer_orders_quarantine
+    table: demo_catalog.sales_quality.customer_orders_quarantine
+    mode: append
+stages:
+  - id: read_raw_orders
+    kind: source
+    operation: read CSV or landing table with inferred schema
+  - id: standardize_fields
+    kind: transform
+    operation: trim strings, lowercase email, uppercase status and currency, parse dates and decimals
+  - id: enrich_customer_id
+    kind: lookup
+    operation: fill missing customer_id by joining customer_dimension on normalized email
+  - id: repair_email_from_dimension
+    kind: lookup
+    operation: when email is malformed and customer_id exists, replace with primary_email
+  - id: dedupe_orders
+    kind: transform
+    operation: drop exact duplicate order_id records and keep earliest ingested_at
+  - id: validate_dq_rules
+    kind: quality_gate
+    operation: run rules from assets/config/dq_rules.yaml using watsonx.data intelligence DQ rules
+  - id: split_quarantine
+    kind: router
+    operation: send negative order_total and non-USD currency to quarantine
+  - id: remediate_dates
+    kind: transform
+    operation: clear ship_date and mark for reprocessing when ship_date is before order_date or after business date
+  - id: write_gold
+    kind: target
+    operation: merge valid/remediated rows into customer_orders gold table
+  - id: write_quarantine
+    kind: target
+    operation: append unrecoverable rows to quality quarantine table
+observability:
+  metrics:
+    - total_rows
+    - valid_rows
+    - remediated_rows
+    - quarantined_rows
+    - duplicate_order_ids
+    - failed_rules_by_rule_id
+  alerts:
+    - condition: quality_pass_rate < 0.98
+      action: create GitHub issue from issue template and notify commerce-data-eng
+mcp_prompts:
+  data_intelligence:
+    - Find asset demo_catalog.sales_curated.customer_orders and summarize latest DQ score, failed rules, and impacted downstream assets.
+    - Create or update data-quality rules from assets/config/dq_rules.yaml and publish them for reuse.
+  data_integration:
+    - Generate a watsonx.data integration batch flow from this blueprint with validation and quarantine branches.
+    - Run dry-run validation and return job metrics, stage logs, and rejected rows.

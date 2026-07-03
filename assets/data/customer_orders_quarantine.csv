@@ -1,0 +1,4 @@
+order_id,customer_id,email,order_date,ship_date,status,order_total,currency,source_system,ingested_at,dq_action,dq_reason
+10010,C-010,julia.nguyen@example.com,2026-07-01,2026-07-02,SHIPPED,79.0,USD,shopify,2026-07-03 06:00:00+00:00,deduplicated,exact duplicate order_id removed; earliest ingested_at kept
+10008,C-008,henry.owens@example.com,2026-06-30,2026-07-02,SHIPPED,-14.99,USD,shopify,2026-07-03 06:00:00+00:00,quarantined,negative order_total
+10013,C-013,marco.rossi@example.com,2026-07-02,,PENDING,64.1,EUR,legacy_crm,2026-07-03 06:00:00+00:00,quarantined,non-USD currency; awaiting FX pipeline

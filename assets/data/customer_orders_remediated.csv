@@ -1,0 +1,13 @@
+order_id,customer_id,email,order_date,ship_date,status,order_total,currency,source_system,ingested_at
+10001,C-001,amy.chen@example.com,2026-06-27,2026-06-28,SHIPPED,125.4,USD,shopify,2026-07-03 06:00:00+00:00
+10002,C-002,brian@retailco.com,2026-06-27,2026-06-29,SHIPPED,84.99,USD,shopify,2026-07-03 06:00:00+00:00
+10003,C-003,carla.mendez@example.com,2026-06-28,,PENDING,42.5,USD,shopify,2026-07-03 06:00:00+00:00
+10004,C-004,daniel.k@example.com,2026-06-28,2026-06-30,SHIPPED,215.0,USD,shopify,2026-07-03 06:00:00+00:00
+10005,C-005,elena.park@example.com,2026-06-29,2026-06-30,SHIPPED,19.99,USD,shopify,2026-07-03 06:00:00+00:00
+10006,C-006,frank.lee@example.com,2026-06-29,2026-06-29,CANCELLED,0.0,USD,shopify,2026-07-03 06:00:00+00:00
+10007,C-007,grace.patel@example.com,2026-06-30,2026-07-01,RETURNED,63.25,USD,shopify,2026-07-03 06:00:00+00:00
+10009,C-009,irina.sokolov@example.com,2026-07-01,,PROCESSING,148.1,USD,shopify,2026-07-03 06:00:00+00:00
+10010,C-010,julia.nguyen@example.com,2026-07-01,2026-07-02,SHIPPED,79.0,USD,shopify,2026-07-03 06:00:00+00:00
+10011,C-011,kai@example.com,2026-07-02,,PROCESSING,130.0,USD,legacy_crm,2026-07-03 06:00:00+00:00
+10012,C-012,lena.martin@example.com,2026-07-02,,PROCESSING,58.75,USD,legacy_crm,2026-07-03 06:00:00+00:00
+10014,C-014,naomi.wright@example.com,2026-07-03,,PENDING,300.0,USD,shopify,2026-07-03 06:00:00+00:00

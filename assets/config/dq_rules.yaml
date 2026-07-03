@@ -1,0 +1,74 @@
+asset:
+  catalog: demo_catalog
+  schema: sales_curated
+  table: customer_orders
+  owner: commerce-data-eng
+  business_domain: order_to_cash
+  criticality: gold
+quality_sla:
+  min_pass_rate: 0.98
+  max_duplicate_order_ids: 0
+  max_invalid_emails: 0
+  max_negative_totals: 0
+  max_future_ship_dates: 0
+rules:
+  - id: ORDER_ID_NOT_NULL
+    column: order_id
+    dimension: completeness
+    check: completeness
+    severity: critical
+    remediation: reject_row
+  - id: ORDER_ID_UNIQUE
+    column: order_id
+    dimension: uniqueness
+    check: unique_key
+    severity: critical
+    remediation: drop_exact_duplicate_keep_first
+  - id: CUSTOMER_ID_NOT_NULL
+    column: customer_id
+    dimension: completeness
+    check: completeness
+    severity: critical
+    remediation: lookup_customer_id_from_email
+  - id: EMAIL_FORMAT
+    column: email
+    dimension: conformity
+    check: regex
+    pattern: '^[^@\s]+@[^@\s]+\.[^@\s]+$'
+    severity: high
+    remediation: lookup_primary_email_from_customer_dimension
+  - id: STATUS_VALID
+    column: status
+    dimension: validity
+    check: valid_values
+    values: [PENDING, PROCESSING, SHIPPED, CANCELLED, RETURNED]
+    severity: high
+    remediation: normalize_uppercase_then_validate
+  - id: ORDER_TOTAL_NON_NEGATIVE
+    column: order_total
+    dimension: accuracy
+    check: range
+    min: 0
+    severity: critical
+    remediation: quarantine_negative_amount
+  - id: CURRENCY_VALID
+    column: currency
+    dimension: conformity
+    check: valid_values
+    values: [USD]
+    severity: medium
+    remediation: quarantine_non_usd_until_fx_pipeline_ready
+  - id: SHIP_DATE_NOT_BEFORE_ORDER_DATE
+    column: ship_date
+    dimension: consistency
+    check: cross_field
+    expression: ship_date is null OR ship_date >= order_date
+    severity: high
+    remediation: clear_invalid_ship_date_and_mark_for_reprocessing
+  - id: SHIP_DATE_NOT_IN_FUTURE
+    column: ship_date
+    dimension: timeliness
+    check: date_not_after
+    max_date: '2026-07-03'
+    severity: high
+    remediation: clear_future_ship_date_and_mark_for_reprocessing

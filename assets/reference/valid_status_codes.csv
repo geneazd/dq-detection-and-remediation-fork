@@ -1,0 +1,6 @@
+status,is_terminal,description
+PENDING,false,Order accepted but not yet fulfilled
+PROCESSING,false,Order is being packed or handed to fulfillment
+SHIPPED,true,Order has shipped
+CANCELLED,true,Order was cancelled before shipment
+RETURNED,true,Order was returned after shipment
